@@ -4,7 +4,7 @@ This tutorial is designed for **English Education students who are new to coding
 
 You do not need to be a programmer to complete this tutorial. The goal is to help you understand how a simple web app can be stored on GitHub and published online using Streamlit.
 
-## What You Will Learn
+## ❄️ What You Will Learn
 
 In this tutorial, you will learn how to:
 
@@ -15,7 +15,7 @@ In this tutorial, you will learn how to:
 - deploy your own Streamlit app
 - open and share your app through a web link
 
-## Why Is This Useful for English Education?
+## ❄️ Why Is This Useful for English Education?
 
 As a future English teacher, you may want to create simple digital tools for teaching and learning.
 
@@ -33,7 +33,7 @@ Streamlit allows you to turn Python code into a web app without learning complic
 
 In this tutorial, the focus is not on advanced coding. Instead, you will learn how digital tools are organized, published, and shared.
 
-## How This Tutorial Works
+## ❄️ How This Tutorial Works
 
 You will begin by **forking this repository**.
 
@@ -57,7 +57,7 @@ Deploy
 Your Own Web App
 ```
 
-## What You Need
+## ❄️ What You Need
 
 Before you begin, prepare the following:
 
@@ -66,7 +66,7 @@ Before you begin, prepare the following:
 3. A web browser  
 4. This tutorial repository  
 
-## Main Files
+## ❄️ Main Files
 
 A simple Streamlit project usually contains files such as:
 
@@ -92,7 +92,7 @@ This file explains the project and provides instructions.
 
 You are reading the `README.md` file now.
 
-## Our Goal
+## ❄️ Our Goal
 
 By the end of this tutorial, you will have your own Streamlit app running online.
 
@@ -106,7 +106,7 @@ You can then share the app with classmates, students, or other teachers.
 
 ---
 
-## Next Step
+## ❄️ Next Step
 
 Start with **Step 1: Fork This Repository**.
 
