@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 from gtts import gTTS
 from io import BytesIO
 
@@ -12,133 +13,107 @@ st.set_page_config(
 )
 
 # --------------------------------------------------
-# Simple styling
-# --------------------------------------------------
-st.markdown("""
-<style>
-    .block-container {
-        max-width: 700px;
-        padding-top: 3rem;
-    }
-
-    .main-title {
-        text-align: center;
-        font-size: 2.4rem;
-        font-weight: 700;
-        margin-bottom: 0.3rem;
-    }
-
-    .subtitle {
-        text-align: center;
-        color: #666;
-        margin-bottom: 2rem;
-    }
-</style>
-""", unsafe_allow_html=True)
-
-# --------------------------------------------------
 # Title
 # --------------------------------------------------
-st.markdown(
-    '<div class="main-title">🔊 Multilingual TTS</div>',
-    unsafe_allow_html=True
-)
+st.title("🔊 Multilingual TTS")
 
-st.markdown(
-    '<div class="subtitle">'
-    'Type a sentence, choose a language, and listen to it.'
-    '</div>',
-    unsafe_allow_html=True
+st.write(
+    "Generate speech using Streamlit, "
+    "or try the browser-based HTML version."
 )
 
 # --------------------------------------------------
-# Language options
-# Each item contains:
-# language code + Google domain
+# Tabs
 # --------------------------------------------------
-languages = {
-    "🇺🇸 English — American": {"lang": "en", "tld": "com"},
-    "🇬🇧 English — British": {"lang": "en", "tld": "co.uk"},
-    "🇰🇷 Korean": {"lang": "ko", "tld": "com"},
-    "🇯🇵 Japanese": {"lang": "ja", "tld": "com"},
-    "🇨🇳 Chinese": {"lang": "zh-CN", "tld": "com"},
-    "🇫🇷 French": {"lang": "fr", "tld": "fr"},
-    "🇪🇸 Spanish": {"lang": "es", "tld": "es"},
-    "🇩🇪 German": {"lang": "de", "tld": "de"},
-    "🇻🇳 Vietnamese": {"lang": "vi", "tld": "com"}
-}
+tab1, tab2 = st.tabs([
+    "🐍 Streamlit TTS",
+    "🌐 HTML TTS"
+])
 
-language_name = st.selectbox(
-    "Choose a language",
-    list(languages.keys())
-)
+# ==================================================
+# TAB 1: Streamlit + gTTS
+# ==================================================
+with tab1:
 
-# Get language settings
-selected_language = languages[language_name]
+    languages = {
+        "🇺🇸 English — American": {"lang": "en", "tld": "com"},
+        "🇬🇧 English — British": {"lang": "en", "tld": "co.uk"},
+        "🇰🇷 Korean": {"lang": "ko", "tld": "com"},
+        "🇯🇵 Japanese": {"lang": "ja", "tld": "com"},
+        "🇨🇳 Chinese": {"lang": "zh-CN", "tld": "com"},
+        "🇫🇷 French": {"lang": "fr", "tld": "fr"},
+        "🇪🇸 Spanish": {"lang": "es", "tld": "es"},
+        "🇩🇪 German": {"lang": "de", "tld": "de"},
+        "🇻🇳 Vietnamese": {"lang": "vi", "tld": "com"}
+    }
 
-# --------------------------------------------------
-# Text input
-# --------------------------------------------------
-text = st.text_area(
-    "Enter text",
-    placeholder="Type something you want to hear...",
-    height=150
-)
+    language_name = st.selectbox(
+        "Choose a language",
+        list(languages.keys())
+    )
 
-# --------------------------------------------------
-# Generate speech
-# --------------------------------------------------
-if st.button(
-    "🔊 Generate Speech",
-    type="primary",
-    use_container_width=True
-):
+    text = st.text_area(
+        "Enter text",
+        placeholder="Type something you want to hear...",
+        height=150
+    )
 
-    if not text.strip():
-        st.warning("Please enter some text first.")
+    if st.button(
+        "🔊 Generate Speech",
+        type="primary",
+        use_container_width=True
+    ):
 
-    else:
-        try:
-            # Create speech
-            tts = gTTS(
-                text=text,
-                lang=selected_language["lang"],
-                tld=selected_language["tld"]
-            )
+        if not text.strip():
+            st.warning("Please enter some text first.")
 
-            # Save audio in memory
-            audio_file = BytesIO()
-            tts.write_to_fp(audio_file)
-            audio_file.seek(0)
+        else:
+            try:
+                selected = languages[language_name]
 
-            # Display result
-            st.success("Audio generated successfully!")
+                tts = gTTS(
+                    text=text,
+                    lang=selected["lang"],
+                    tld=selected["tld"]
+                )
 
-            st.audio(
-                audio_file,
-                format="audio/mp3"
-            )
+                audio_file = BytesIO()
+                tts.write_to_fp(audio_file)
+                audio_file.seek(0)
 
-            # Download button
-            st.download_button(
-                label="⬇️ Download MP3",
-                data=audio_file.getvalue(),
-                file_name="tts_audio.mp3",
-                mime="audio/mpeg",
-                use_container_width=True
-            )
+                st.audio(
+                    audio_file,
+                    format="audio/mp3"
+                )
 
-        except Exception:
-            st.error(
-                "Could not generate audio. "
-                "Please check your internet connection and try again."
-            )
+                st.download_button(
+                    "⬇️ Download MP3",
+                    data=audio_file.getvalue(),
+                    file_name="tts_audio.mp3",
+                    mime="audio/mpeg",
+                    use_container_width=True
+                )
 
-# --------------------------------------------------
-# Footer
-# --------------------------------------------------
-st.divider()
+            except Exception:
+                st.error("Could not generate audio.")
 
-st.caption(
-    "Built with Python, Streamlit, and Google Text-to-Speech (gTTS)."
-)
+# ==================================================
+# TAB 2: HTML version
+# ==================================================
+with tab2:
+
+    st.subheader("Browser-based TTS")
+
+    st.caption(
+        "This version uses HTML, JavaScript, "
+        "and the browser Web Speech API."
+    )
+
+    with open("tts.html", "r", encoding="utf-8") as file:
+        html_code = file.read()
+
+    components.html(
+        html_code,
+        height=750,
+        scrolling=True
+    )
