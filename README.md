@@ -66,8 +66,6 @@ Before you begin, prepare the following:
 3. A web browser  
 4. This tutorial repository  
 
-You do not need to install Python on your computer for the basic activities in this tutorial.
-
 ## Main Files
 
 A simple Streamlit project usually contains files such as:
