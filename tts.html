@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Multilingual TTS</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #f6f7fb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      color: #222;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 680px;
+      background: white;
+      border-radius: 20px;
+      padding: 35px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 8px;
+      font-size: 2.2rem;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 30px;
+      line-height: 1.5;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      margin-top: 18px;
+    }
+
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid #d7dbe3;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 1rem;
+      background: white;
+    }
+
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #555;
+    }
+
+    textarea {
+      height: 160px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .play-button {
+      background: #222;
+      color: white;
+    }
+
+    .stop-button {
+      background: #eceef2;
+      color: #222;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .settings {
+      margin-top: 25px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+
+    .slider-row {
+      margin-top: 15px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+    }
+
+    .value {
+      color: #666;
+      font-size: 0.9rem;
+      float: right;
+    }
+
+    .status {
+      margin-top: 20px;
+      min-height: 24px;
+      text-align: center;
+      color: #555;
+      font-size: 0.95rem;
+    }
+
+    footer {
+      margin-top: 28px;
+      text-align: center;
+      color: #999;
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 24px;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      .controls {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <h1>🔊 Multilingual TTS</h1>
+
+    <div class="subtitle">
+      Type a sentence, choose a language, and listen to it.
+    </div>
+
+    <label for="language">Choose a language</label>
+
+    <select id="language">
+      <option value="en-US">🇺🇸 English — American</option>
+      <option value="en-GB">🇬🇧 English — British</option>
+      <option value="ko-KR">🇰🇷 Korean</option>
+      <option value="ja-JP">🇯🇵 Japanese</option>
+      <option value="zh-CN">🇨🇳 Chinese</option>
+      <option value="fr-FR">🇫🇷 French</option>
+      <option value="es-ES">🇪🇸 Spanish</option>
+      <option value="de-DE">🇩🇪 German</option>
+      <option value="vi-VN">🇻🇳 Vietnamese</option>
+    </select>
+
+    <label for="text">Enter text</label>
+
+    <textarea
+      id="text"
+      placeholder="Type something you want to hear..."
+    ></textarea>
+
+    <div class="settings">
+
+      <div class="slider-row">
+        <label>
+          Speed
+          <span class="value" id="rateValue">1.0</span>
+        </label>
+
+        <input
+          id="rate"
+          type="range"
+          min="0.5"
+          max="1.5"
+          step="0.1"
+          value="1"
+        />
+      </div>
+
+      <div class="slider-row">
+        <label>
+          Pitch
+          <span class="value" id="pitchValue">1.0</span>
+        </label>
+
+        <input
+          id="pitch"
+          type="range"
+          min="0.5"
+          max="1.5"
+          step="0.1"
+          value="1"
+        />
+      </div>
+
+    </div>
+
+    <div class="controls">
+
+      <button class="play-button" onclick="speakText()">
+        ▶ Play
+      </button>
+
+      <button class="stop-button" onclick="stopSpeech()">
+        ■ Stop
+      </button>
+
+    </div>
+
+    <div class="status" id="status"></div>
+
+    <footer>
+      Built with HTML, CSS, JavaScript, and the Web Speech API
+    </footer>
+
+  </div>
+
+  <script>
+
+    const synth = window.speechSynthesis;
+
+    const languageSelect = document.getElementById("language");
+    const textInput = document.getElementById("text");
+
+    const rateSlider = document.getElementById("rate");
+    const pitchSlider = document.getElementById("pitch");
+
+    const rateValue = document.getElementById("rateValue");
+    const pitchValue = document.getElementById("pitchValue");
+
+    const status = document.getElementById("status");
+
+    let voices = [];
+
+
+    // --------------------------------------------------
+    // Load available browser voices
+    // --------------------------------------------------
+
+    function loadVoices() {
+      voices = synth.getVoices();
+    }
+
+    loadVoices();
+
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+      speechSynthesis.onvoiceschanged = loadVoices;
+    }
+
+
+    // --------------------------------------------------
+    // Slider values
+    // --------------------------------------------------
+
+    rateSlider.addEventListener("input", () => {
+      rateValue.textContent = rateSlider.value;
+    });
+
+    pitchSlider.addEventListener("input", () => {
+      pitchValue.textContent = pitchSlider.value;
+    });
+
+
+    // --------------------------------------------------
+    // Find the best matching voice
+    // --------------------------------------------------
+
+    function findVoice(languageCode) {
+
+      // Try an exact match first
+      let voice = voices.find(v =>
+        v.lang.toLowerCase() === languageCode.toLowerCase()
+      );
+
+      if (voice) {
+        return voice;
+      }
+
+
+      // If exact match is unavailable,
+      // try matching the main language code
+
+      const baseLanguage = languageCode.split("-")[0];
+
+      voice = voices.find(v =>
+        v.lang.toLowerCase().startsWith(baseLanguage.toLowerCase())
+      );
+
+      return voice;
+    }
+
+
+    // --------------------------------------------------
+    // Speak
+    // --------------------------------------------------
+
+    function speakText() {
+
+      const text = textInput.value.trim();
+
+      if (!text) {
+        status.textContent = "Please enter some text first.";
+        return;
+      }
+
+
+      // Stop any current speech
+      synth.cancel();
+
+
+      const languageCode = languageSelect.value;
+
+      const utterance = new SpeechSynthesisUtterance(text);
+
+      utterance.lang = languageCode;
+
+      utterance.rate = parseFloat(rateSlider.value);
+      utterance.pitch = parseFloat(pitchSlider.value);
+
+
+      const selectedVoice = findVoice(languageCode);
+
+      if (selectedVoice) {
+        utterance.voice = selectedVoice;
+      }
+
+
+      utterance.onstart = () => {
+
+        if (selectedVoice) {
+          status.textContent =
+            "Playing: " +
+            selectedVoice.name +
+            " (" +
+            selectedVoice.lang +
+            ")";
+        } else {
+          status.textContent =
+            "Playing with the browser's default voice.";
+        }
+      };
+
+
+      utterance.onend = () => {
+        status.textContent = "Finished.";
+      };
+
+
+      utterance.onerror = () => {
+        status.textContent = "Speech playback failed.";
+      };
+
+
+      synth.speak(utterance);
+    }
+
+
+    // --------------------------------------------------
+    // Stop
+    // --------------------------------------------------
+
+    function stopSpeech() {
+      synth.cancel();
+      status.textContent = "Stopped.";
+    }
+
+  </script>
+
+</body>
+</html>
