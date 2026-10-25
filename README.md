@@ -71,7 +71,7 @@ Before you begin, prepare the following:
 A simple Streamlit project usually contains files such as:
 
 ```text
-project-folder/
+repository(project-folder)/
 │
 ├── app.py
 ├── requirements.txt
