@@ -36,15 +36,87 @@ tab1, tab2 = st.tabs([
 with tab1:
 
     languages = {
-        "🇺🇸 English — American": {"lang": "en", "tld": "com"},
-        "🇬🇧 English — British": {"lang": "en", "tld": "co.uk"},
-        "🇰🇷 Korean": {"lang": "ko", "tld": "com"},
-        "🇯🇵 Japanese": {"lang": "ja", "tld": "com"},
-        "🇨🇳 Chinese": {"lang": "zh-CN", "tld": "com"},
-        "🇫🇷 French": {"lang": "fr", "tld": "fr"},
-        "🇪🇸 Spanish": {"lang": "es", "tld": "es"},
-        "🇩🇪 German": {"lang": "de", "tld": "de"},
-        "🇻🇳 Vietnamese": {"lang": "vi", "tld": "com"}
+        "🇺🇸 English — American": {
+            "lang": "en",
+            "tld": "com",
+            "sample": (
+                "Welcome! This is my TTS application for my future students. "
+                "I hope you enjoy this application."
+            )
+        },
+
+        "🇬🇧 English — British": {
+            "lang": "en",
+            "tld": "co.uk",
+            "sample": (
+                "Welcome! This is my TTS application for my future students. "
+                "I hope you enjoy this application."
+            )
+        },
+
+        "🇰🇷 Korean": {
+            "lang": "ko",
+            "tld": "com",
+            "sample": (
+                "환영합니다! 이것은 제가 미래의 학생들을 위해 만든 "
+                "TTS 애플리케이션입니다. 이 애플리케이션을 즐겁게 사용하시길 바랍니다."
+            )
+        },
+
+        "🇯🇵 Japanese": {
+            "lang": "ja",
+            "tld": "com",
+            "sample": (
+                "ようこそ！これは私が将来の生徒たちのために作った "
+                "TTSアプリケーションです。このアプリを楽しんでいただければ嬉しいです。"
+            )
+        },
+
+        "🇨🇳 Chinese": {
+            "lang": "zh-CN",
+            "tld": "com",
+            "sample": (
+                "欢迎！这是我为未来的学生制作的TTS应用程序。"
+                "希望你喜欢这个应用程序。"
+            )
+        },
+
+        "🇫🇷 French": {
+            "lang": "fr",
+            "tld": "fr",
+            "sample": (
+                "Bienvenue ! Voici mon application de synthèse vocale "
+                "pour mes futurs élèves. J'espère que vous apprécierez cette application."
+            )
+        },
+
+        "🇪🇸 Spanish": {
+            "lang": "es",
+            "tld": "es",
+            "sample": (
+                "¡Bienvenidos! Esta es mi aplicación de texto a voz "
+                "para mis futuros estudiantes. Espero que disfruten de esta aplicación."
+            )
+        },
+
+        "🇩🇪 German": {
+            "lang": "de",
+            "tld": "de",
+            "sample": (
+                "Willkommen! Dies ist meine TTS-Anwendung für meine zukünftigen Schüler. "
+                "Ich hoffe, dass Ihnen diese Anwendung gefällt."
+            )
+        },
+
+        "🇻🇳 Vietnamese": {
+            "lang": "vi",
+            "tld": "com",
+            "sample": (
+                "Chào mừng! Đây là ứng dụng chuyển văn bản thành giọng nói "
+                "mà tôi tạo cho các học sinh tương lai của mình. "
+                "Tôi hy vọng các bạn sẽ thích ứng dụng này."
+            )
+        }
     }
 
     language_name = st.selectbox(
@@ -52,9 +124,11 @@ with tab1:
         list(languages.keys())
     )
 
+    selected = languages[language_name]
+
     text = st.text_area(
         "Enter text",
-        placeholder="Type something you want to hear...",
+        value=selected["sample"],
         height=150
     )
 
@@ -69,8 +143,6 @@ with tab1:
 
         else:
             try:
-                selected = languages[language_name]
-
                 tts = gTTS(
                     text=text,
                     lang=selected["lang"],
@@ -80,6 +152,8 @@ with tab1:
                 audio_file = BytesIO()
                 tts.write_to_fp(audio_file)
                 audio_file.seek(0)
+
+                st.success("Audio generated successfully!")
 
                 st.audio(
                     audio_file,
