@@ -111,3 +111,5 @@ You can then share the app with classmates, students, or other teachers.
 Start with **Step 1: Fork This Repository**.
 
 Do not worry if GitHub looks unfamiliar at first. You will learn each step gradually.
+
+[Go to the next step: multipage application](https://github.com/MK316/streamlitsample/blob/main/multipages.md)
