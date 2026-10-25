@@ -1,4 +1,4 @@
-# Deploying a Streamlit App from GitHub
+# I. Deploying a Streamlit App from GitHub
 
 This tutorial is designed for **English Education students who are new to coding, GitHub, and Streamlit**.
 
