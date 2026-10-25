@@ -26,7 +26,7 @@ st.write(
 # Tabs
 # --------------------------------------------------
 tab1, tab2 = st.tabs([
-    "🐍 Streamlit TTS",
+    "🐳 Streamlit TTS",
     "🌐 HTML TTS"
 ])
 
