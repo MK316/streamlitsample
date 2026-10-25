@@ -1,7 +1,5 @@
 # Deploying a Streamlit App from GitHub
 
-Welcome!
-
 This tutorial is designed for **English Education students who are new to coding, GitHub, and Streamlit**.
 
 You do not need to be a programmer to complete this tutorial. The goal is to help you understand how a simple web app can be stored on GitHub and published online using Streamlit.
