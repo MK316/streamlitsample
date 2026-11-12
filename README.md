@@ -8,7 +8,7 @@ You do not need to be a programmer to complete this tutorial. The goal is to hel
 
 In this tutorial, you will learn how to:
 
-- fork a GitHub repository
+- fork a GitHub repository [sample repository](https://github.com/MK316/Streamlit_app)
 - understand the basic files in a Streamlit project
 - make small changes to a Python file
 - connect your GitHub repository to Streamlit Community Cloud
